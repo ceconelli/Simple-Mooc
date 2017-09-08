@@ -123,9 +123,9 @@ def index(request):
 ```
 
 * Após a criação do model, é preciso fazer a migração, o que cria um arquivo na pasta Migrations:
-```python
-	python manage.py makemigrations # Cria um migration file
-	python manage.py migrate # Aplica a migração ao banco de dados
+```
+python manage.py makemigrations # Cria um migration file
+python manage.py migrate # Aplica a migração ao banco de dados
 ```
 
 #### **Image Field**
@@ -135,10 +135,59 @@ image = models.ImageField(upload_to = 'path',verbose_name='nome') #upload_to -> 
 * É preciso installar o pillow para que o django reconheça se o arquivo é mesmo uma imagem (pip install pillow)
 
 #### **Custom Model manager**
+É possível criar uma classe dentro do próprio model, de forma a customizar o que aparecerá no `admin` do site:
+```python
+#Dentro do seu model
 
+#O nome que aparecerá no admin será o atributo name
+	def __str__(self):
+		return self.name
+#ordena o db pelo atributo name,e muda o nome do model
+	class Meta:
+		verbose_name = 'Curso'
+		verbose_name_plural = 'Cursos'
+		ordering = ['name']
+```
+É possível fazer mais customizações.
 
+---
 
+### **Consultas ao banco de dados**
+Caso voce tenha um modelo no seu banco de dados, é possível fazer queries:
+```python
 
+	aux = Nome_do_seu_modelo.objects.all() #isso retorna todos os objetos do tipo Nome_do_seu_modelo
+	aux = Nome_do_seu_modelo.objects.filter(atributo_do_seu_modelo = 'algum_especifico')
+	aux = Nome_do_seu_modelo.objects.filter(atributo_do_seu_modelo = 'algum_especifico').filter(outro_atributo = 'algum_especifico')
+```
+## **ADMIN**
+Na seção `admin` é possível gerenciar o banco de dados
+
+* Depois de criar algum model, é preciso adicioná-lo ao `admin.py` do app :
+```python
+from .models import seu_model
+	# Register your models here.
+	admin.site.register(seu_model)
+```
+* Para acessar o admin, é preciso cadastrar um `superuser` antes:
+```
+python manage.py create superuser 
+``` 
+#### **Configurar o admin**
+É possível criar uma classe que herda de admin.ModelAdmin, que contem atributos que alterarão a exibiçao no admin. Ex:
+```python	
+#Em admin.py
+	class CourseAdmin(admin.ModelAdmin):
+		list_display = ['name','slug','start_date','created_at']
+		search_fields = ['name','slug']
+```
+* `list_display` fará com que somente os campos especificados apareçam no admin.
+* `search_fields` fará com que apareça uma aba de pequisa que pesquisará nos campos especificados.
+* Um `modelAdmin` está associado a um model, logo é preciso registrá-lo junto com seu Model: 
+```python
+# Em admin.py
+	admin.site.register(Seu_model,Seu_modelAdmin)
+```
 
 
 
