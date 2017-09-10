@@ -50,8 +50,9 @@ Quando se usa o `include('nome_do_aplicativo.urls')`, é bom usar o **namespace*
 
 * Caso exitam duas urls com o mesmo nome, porem são de apps diferentes: 
 ```HTML
-href="{% url 'nome_do_namespace:nome_da_url %}
+<a href="{% url 'nome_do_namespace:nome_da_url' %}">link</a>
 ```
+* Dessa forma, pesquisa-se primeiro qual app tem o namespace igual a `nome_do_namespace`. Caso entrado o app, procura-se nas urls desse app qual tem o `name` igual a `nome_da_url`.
 #### **URLPATTERN**: 
 ```python
 urlpatterns = patterns('',
@@ -180,14 +181,17 @@ python manage.py create superuser
 	class CourseAdmin(admin.ModelAdmin):
 		list_display = ['name','slug','start_date','created_at']
 		search_fields = ['name','slug']
+		prepopulated_fields = {'slug':('name',)}
 ```
 * `list_display` fará com que somente os campos especificados apareçam no admin.
 * `search_fields` fará com que apareça uma aba de pequisa que pesquisará nos campos especificados.
+* `prepopulated_fields` fará com que o campo slug seja preenchido automaticamente com o nome (retirando espaços e acentos)
 * Um `modelAdmin` está associado a um model, logo é preciso registrá-lo junto com seu Model: 
 ```python
 # Em admin.py
 	admin.site.register(Seu_model,Seu_modelAdmin)
 ```
+# **Renderizando uma página com dados do db**
 
 
 
