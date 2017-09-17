@@ -14,6 +14,7 @@ class Course(models.Model):
 	name = models.CharField('Nome',max_length=100)
 	slug = models.SlugField('Atalho') #Campo de URL
 	description = models.TextField('Descrição',blank=True) #blank=True -> Campo nao é obrigatorio
+	about = models.TextField('Sobre o curso',blank=True)
 	start_date = models.DateField('Data de Inicio',null=True,blank=True)
 	image = models.ImageField(upload_to='courses/images',verbose_name='Imagem',blank=True,null=True)
 	created_at = models.DateTimeField('Criado em',auto_now_add=True) #campo data hora, a hora que for criado sera colocada no db
