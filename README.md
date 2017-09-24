@@ -176,8 +176,9 @@ python manage.py create superuser
 ``` 
 #### **Configurar o admin**
 É possível criar uma classe que herda de admin.ModelAdmin, que contem atributos que alterarão a exibiçao no admin. Ex:
+
 ```python	
-#Em admin.py
+# Em admin.py
 	class CourseAdmin(admin.ModelAdmin):
 		list_display = ['name','slug','start_date','created_at']
 		search_fields = ['name','slug']
@@ -191,7 +192,49 @@ python manage.py create superuser
 # Em admin.py
 	admin.site.register(Seu_model,Seu_modelAdmin)
 ```
+
 # **Renderizando uma página com dados do db**
+Para mostrar imagens presentes no banco de dados em um template, é preciso carregá-las da seguinte maneira:
+```HTML
+<img src="{{ course.image.url }}">
+```
+No entanto, para que essas imagens estejam presentes no banco de dados, é preciso indicar o caminho onde elas serão armazenadas. Para isso, é preciso criar duas variáveis em `settings.py`:
+```python
+MEDIA_ROOT = os.path.join(BASE_DIR,'nome_do_projeto','media')
+MEDIA_URL = '/media/'
+```
+Após definir os paths, é preciso adicioná-lo à `urls.py` do projeto, da seguinte maneira:
+```python
+urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+```
+Dessa maneira, será criada a seguinte estrutura de diretórios:
+
+* diretório_do_projeto
+ * nome_do_projeto
+     * media
+
+O upload de imagens será feito em `media`, dentro do diretório passado como parâmetro no model.Ex:
+
+```python
+image = models.ImageField(upload_to='courses/images',verbose_name='Imagem')
+```
+Portanto, as imagens serão armazenadas em:
+
+* diretório_do_projeto
+  * nome_do_projeto
+     * media
+         * courses
+             * images
+
+# **Carregando arquivos estáticos para um template**
+
+Deve-se criar uma pasta `static` dentro do app, então, para referenciá-lo no template, é preciso colocar {% load static %} no inicio do template.
+
+No `scr` ou `href`, fazer :
+```html
+<img src="{% static 'img/nome_da_imagem' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/nome_do_arquivo.css' %}">
+```
 
 
 
