@@ -210,7 +210,7 @@ urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 Dessa maneira, será criada a seguinte estrutura de diretórios:
 
 * diretório_do_projeto
- * nome_do_projeto
+  * nome_do_projeto
      * media
 
 O upload de imagens será feito em `media`, dentro do diretório passado como parâmetro no model.Ex:
